@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  localstack:
+    container_name: "localstack" # Container name in your docker
+    image: localstack/localstack:latest # Will download latest version of localstack
+    ports:
+      - "4563-4584:4563-4584" # Default port forward
+      - "9200:4571" # Elasticsearch port forward
+      - "8080:8080" # WebUI port forward
+    environment:
+      - SERVICES=s3 #AWS Services that you want in your localstack
+      - DEBUG=1 # Debug level 1 if you want to logs, 0 if you want to disable
+      - START_WEB=0 # Flag to control whether the Web UI should be started in Docker
+      - LAMBDA_REMOTE_DOCKER=0
+      - DATA_DIR=tmp/localstack/data #  Local directory for saving persistent data(Example: es storage)
+    volumes:
+      - './.localstack:/var/lib/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  mobilecoin:
+    container_name: "mobilecoin"
+    image: briancorbin/mc-network:preview
+    ports:
+      - "3200-3202:3200-3202"
+      - "6200:6200"
+    tty: true
+    depends_on:
+      - "localstack"
+      - "db"
+    environment:
+      - MC_SEED=e9b4b31bf94b43c969fa33590b1356cc4854008220154050ab95802bb9f770b9
+      - IAS_MODE=DEV
+      - SGX_MODE=SW
+      - AWS_ACCESS_KEY_ID=accesskeyid
+      - AWS_SECRET_ACCESS_KEY=secretkey
+      - AWS_DEFAULT_REGION=custom
+      - DATABASE_URL=postgres://postgres:example@db:5432/fog_local
+    command: bash -c "sleep 5; python3 /mc-network/fog_local_network.py --network-type a-b-c"
+    volumes:
+      - ./sample_data:/mc-network/sample_data
+
+  db:
+    container_name: "postgres"
+    image: postgres
+    ports:
+      - "8001:5432"
+    environment:
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_DB=fog_local
+
+networks:
+  default:
+    name: dockernet
