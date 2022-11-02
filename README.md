@@ -39,14 +39,15 @@ cargo build --release
 #### Run
 
 ```sh
-mkdir -p /tmp/wallet-db/
-./target/release/full-service \
-    --wallet-db /tmp/wallet-db/wallet.db \
-    --ledger-db /tmp/ledger-db/ \
+mkdir -p wallet-db/
+./full-service \
+    --wallet-db wallet-db/wallet.db \
+    --ledger-db ledger-db/ \
     --peer insecure-mc://localhost:3200 \
     --peer insecure-mc://localhost:3201 \
-    --tx-source-url http://localhost:4563/node-0-ledger \
-    --tx-source-url http://localhost:4563/node-1-ledger \
+    --tx-source-url http://localhost:4566/node-0-ledger \
+    --tx-source-url http://localhost:4566/node-1-ledger \
     --fog-ingest-enclave-css $(pwd)/ingest-enclave.css \
     --chain-id local
 ```
+
