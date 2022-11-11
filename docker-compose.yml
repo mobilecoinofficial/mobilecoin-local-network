@@ -22,7 +22,9 @@ services:
     image: briancorbin/mc-network:preview
     ports:
       - "3200-3202:3200-3202"
-      - "6200:6200"
+      - "3400-3402:3400-3402"
+      - "3500-3502:3500-3502"
+      - "8200:8200"
     tty: true
     depends_on:
       - "localstack"

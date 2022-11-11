@@ -7,7 +7,7 @@ To start the mobilecoin network, run ```docker compose up -d``` from the root di
 Node 0: 3200
 Node 1: 3201
 Node 2: 3202
-Fog: 6200
+Fog: 8200
 
 There are LocalStack S3 buckets running for each of the nodes ledger distributions at ```http://localhost:4563/node-<NODE NUM>-ledger```
 
